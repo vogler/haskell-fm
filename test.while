@@ -1,0 +1,7 @@
+x := 5;
+y := 7;
+(if (x > y) then z := 10
+            else z := 11); 
+(while (x < 10) do
+  x := x+1);
+ret := z + 1
