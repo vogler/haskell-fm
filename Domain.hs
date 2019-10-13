@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -XFlexibleInstances -XUndecidableInstances #-}
 {- Simple interfaces for domains based on
  -    http://matt.might.net/articles/partial-orders -}
 
@@ -25,23 +26,24 @@ instance Ord e => Domain (S.Set e) where
   x ⊔ y = x ∪ y
   bot   = S.empty
 
-data Flat a = Top | Bot | Flat a deriving (Show, Ord, Eq)
+data Flat a = Bot | Flat a | Top deriving (Show, Ord, Bounded)
 
-instance Eq a => Domain (Flat a) where
-  Bot    ⊑ _      = True
-  _      ⊑ Top    = True
-  Flat x ⊑ Flat y = x == y
-  _      ⊑ _      = False
+instance Ord a => Domain a where
+  x ⊑ y = x <= y
+  x ⊔ y = min x y
+  -- Bot    ⊑ _      = True
+  -- _      ⊑ Top    = True
+  -- Flat x ⊑ Flat y = x == y
+  -- _      ⊑ _      = False
 
-  Bot    ⊔ x      = x
-  x      ⊔ Bot    = x
-  Top    ⊔ _      = Top
-  _      ⊔ Top    = Top
-  Flat x ⊔ Flat y 
-    | x == y      = Flat x
-    | otherwise   = Top
-
-  bot             = Bot
+  -- Bot    ⊔ x      = x
+  -- x      ⊔ Bot    = x
+  -- Top    ⊔ _      = Top
+  -- _      ⊔ Top    = Top
+  -- Flat x ⊔ Flat y 
+  --   | x == y      = Flat x
+  --   | otherwise   = Top
+  bot             = minBound
   
   
 
